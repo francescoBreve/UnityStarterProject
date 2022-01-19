@@ -1,19 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[System.Serializable] public class UIElement
-{
-    [SerializeField] public string UIKey;
-    [SerializeField] public GameObject UIObject;
-}
+using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
     public List<UIElement> UIElements = new List<UIElement>();
-    public Dictionary<string, GameObject> _UIElements = new Dictionary<string, GameObject>();
+    public Dictionary<string, UIElement> _UIElements = new Dictionary<string, UIElement>();
 
     private void Awake()
     {
@@ -23,7 +18,6 @@ public class UIManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
             CacheUIElementsIndexes();
             //Rest of your Awake code
-
         }
         else
         {
@@ -47,17 +41,17 @@ public class UIManager : MonoBehaviour
     {
         foreach(UIElement x in UIElements)
         {
-            _UIElements.Add(x.UIKey, x.UIObject);
+            _UIElements.Add(x.UIKey, x);
         }
     }
 
     public void ShowElement(string UIelementName)
     {
-        _UIElements[UIelementName].SetActive(true);
+        _UIElements[UIelementName].gameObject.SetActive(true);
     }
 
     public void HideElement(string UIelementName)
     {
-        _UIElements[UIelementName].SetActive(false);
+        _UIElements[UIelementName].gameObject.SetActive(false);
     }
 }

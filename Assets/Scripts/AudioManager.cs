@@ -30,16 +30,16 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
-    public AudioMixer mixer;
-    public AudioMixerGroup masterGroup;
-    public AudioMixerGroup musicGroup;
-    public AudioMixerGroup effectsGroup;
-    public AudioMixerGroup dialogueGroup;
+    [SerializeField] private AudioMixer mixer;
+    [SerializeField] private AudioMixerGroup masterGroup;
+    [SerializeField] private AudioMixerGroup musicGroup;
+    [SerializeField] private AudioMixerGroup effectsGroup;
+    [SerializeField] private AudioMixerGroup dialogueGroup;
 
-    [Range(0, 1)] public float masterVolume = 0.5f;
-    [Range(0, 1)] public float musicVolume = 0.5f;
-    [Range(0, 1)] public float effectsVolume = 0.5f;
-    [Range(0, 1)] public float dialogueVolume = 0.5f;
+    [Range(0,1)] [SerializeField] public float masterVolume  = 0.5f;
+    [Range(0,1)] [SerializeField] public float musicVolume  = 0.5f;
+    [Range(0,1)] [SerializeField] public float effectsVolume  = 0.5f;
+    [Range(0,1)] [SerializeField] public float dialogueVolume = 0.5f;
     [Space]
     public AudioElement[] audioElements;
 
@@ -104,6 +104,32 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
+
+    public float GetAudioVolume(AudioCategory audioCategory)
+    {
+        switch (audioCategory)
+        {
+            case AudioCategory.MASTER:
+                return masterVolume;
+                break;
+            case AudioCategory.MUSIC:
+                return musicVolume;
+                break;
+            case AudioCategory.EFFECTS:
+                return effectsVolume;
+                break;
+            case AudioCategory.DIALOGUE:
+                return dialogueVolume;
+                break;
+        }
+        return -1;
+    }
+        
+    public void SetVolumeFromSlider(string cat)
+    {
+        Debug.Log(this.name);
+    }
+
     public void Play(string audioName)
     {
         audioElements[_indexCache[audioName]].source.Play();
@@ -114,35 +140,35 @@ public class AudioManager : MonoBehaviour
     }
     public void SetMasterVolume(float volume)
     {
-        SetVolume(AudioCategory.MASTER, volume);
+        SetVolume(AudioCategory.MASTER, Mathf.Clamp01(volume));
     }
     public void SetMusicVolume(float volume)
     {
-        SetVolume(AudioCategory.MUSIC, volume);
+        SetVolume(AudioCategory.MUSIC, Mathf.Clamp01(volume));
     }
     public void SetEffectsVolume(float volume)
     {
-        SetVolume(AudioCategory.EFFECTS, volume);
+        SetVolume(AudioCategory.EFFECTS, Mathf.Clamp01(volume));
     }
     public void SetDialogueVolume(float volume)
     {
-        SetVolume(AudioCategory.DIALOGUE, volume);
+        SetVolume(AudioCategory.DIALOGUE, Mathf.Clamp01(volume));
     }
     public void SetVolume(AudioCategory audioCategory, float volume)
     {
         switch (audioCategory)
         {
             case AudioCategory.MASTER:
-                masterVolume = volume;
+                masterVolume = Mathf.Clamp01(volume);
                 break;
             case AudioCategory.MUSIC:
-                musicVolume = volume;
+                musicVolume = Mathf.Clamp01(volume);
                 break;
             case AudioCategory.EFFECTS:
-                effectsVolume = volume;
+                effectsVolume = Mathf.Clamp01(volume);
                 break;
             case AudioCategory.DIALOGUE:
-                dialogueVolume = volume;
+                dialogueVolume = Mathf.Clamp01(volume);
                 break;
         }
         mixer.SetFloat("masterVolume", masterVolume);
@@ -157,5 +183,5 @@ public class AudioManager : MonoBehaviour
             _indexCache.Add(audioElements[i].name, i);
         }
     }
-   
+
 }
