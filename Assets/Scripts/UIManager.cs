@@ -12,8 +12,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public UIElement[] UIElements;
-    public Dictionary<string, GameObject> _UIElements;
+    public List<UIElement> UIElements = new List<UIElement>();
+    public Dictionary<string, GameObject> _UIElements = new Dictionary<string, GameObject>();
 
     private void Awake()
     {
@@ -21,12 +21,15 @@ public class UIManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+            CacheUIElementsIndexes();
             //Rest of your Awake code
+
         }
         else
         {
             Destroy(this);
         }
+
     }
     // Start is called before the first frame update
     void Start()
@@ -52,6 +55,7 @@ public class UIManager : MonoBehaviour
     {
         _UIElements[UIelementName].SetActive(true);
     }
+
     public void HideElement(string UIelementName)
     {
         _UIElements[UIelementName].SetActive(false);
