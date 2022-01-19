@@ -52,15 +52,13 @@ public class AudioManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-
-            SetupAudioSources();
-            CacheAudioElementsIndexes();
         }
         else
         {
             Destroy(this);
         }
-
+        SetupAudioSources();
+        CacheAudioElementsIndexes();
     }
 
     // Start is called before the first frame update
@@ -111,16 +109,12 @@ public class AudioManager : MonoBehaviour
         {
             case AudioCategory.MASTER:
                 return masterVolume;
-                break;
             case AudioCategory.MUSIC:
                 return musicVolume;
-                break;
             case AudioCategory.EFFECTS:
                 return effectsVolume;
-                break;
             case AudioCategory.DIALOGUE:
                 return dialogueVolume;
-                break;
         }
         return -1;
     }

@@ -17,13 +17,6 @@ public class UIElement : MonoBehaviour
             Debug.LogError("Already existing object in hierarchy with UIKey: " + UIKey);
         }
     }
-    
-    public bool DuplicateValidation()
-    {
-        UIElement[] elm = Resources.FindObjectsOfTypeAll<UIElement>();
-        var dup = elm.Where(i => i.UIKey == this.UIKey);
-        return dup.ToList().Count > 1 ? true : false;
-    }
 
     private void OnValidate()
     {
@@ -33,4 +26,10 @@ public class UIElement : MonoBehaviour
         }
     }
 
+    private bool DuplicateValidation()
+    {
+        UIElement[] elm = Resources.FindObjectsOfTypeAll<UIElement>();
+        var dup = elm.Where(i => i.UIKey == this.UIKey);
+        return dup.ToList().Count > 1 ? true : false;
+    }
 }

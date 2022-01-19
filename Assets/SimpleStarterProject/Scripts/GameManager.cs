@@ -12,7 +12,8 @@ public enum GameState
 
 public enum SceneIndexs
 {
-    MANAGERS = 0
+    MANAGERS = 0,
+    TEST_SCENE = 1
 }
 
 public class GameManager : MonoBehaviour
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameState gameState;
 
-    List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
+    public List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
 
     private void Awake()
     {
@@ -59,12 +60,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static void LoadScene(int load)
+    {
+        GameManager.instance.scenesLoading.Add(SceneManager.LoadSceneAsync(load, LoadSceneMode.Additive));
+    }
+    public static void UnloadScene(int unload)
+    {
+        GameManager.instance._UnloadScene(unload);
+    }
+    private void _UnloadScene(int unload)
+    {
+        AsyncOperation op = SceneManager.UnloadSceneAsync(unload);
+        GameManager.instance.scenesLoading.Add(op);
+        StartCoroutine(RefreshAfterUnload(op));
+    }
+    public IEnumerator RefreshAfterUnload(AsyncOperation operation)
+    {
+        while (!operation.isDone)
+        {
+            yield return null;
+        }
+        if(operation != null)
+            UIManager.instance.RefreshUIElemets();
+    }
+
     //LoadSceneWithCurtain allows you to load and unload one or multiple scenes
     //In addition it supports the visualization of the UI Element declared in the UI Manager
     #region LoadSceneWithCurtain
     public void LoadSceneWithCurtain(int[] load, string loadingScreen)
     {
-        UIManager.instance.ShowElement(loadingScreen);
+        UIManager.ShowElement(loadingScreen);
         for (int i = 0; i < load.Length; i++)
         {
             scenesLoading.Add(SceneManager.LoadSceneAsync(load[i], LoadSceneMode.Additive));
@@ -79,7 +104,7 @@ public class GameManager : MonoBehaviour
     }
     public void LoadSceneWithCurtain(int[] unload, int[] load, string loadingScreen)
     {
-        UIManager.instance.ShowElement(loadingScreen);
+        UIManager.ShowElement(loadingScreen);
 
         for(int i=0; i<unload.Length; i++)
         {
@@ -94,14 +119,14 @@ public class GameManager : MonoBehaviour
     }
     public void LoadSceneWithCurtain(int unload, int load, string loadingScreen)
     {
-        UIManager.instance.ShowElement(loadingScreen);
+        UIManager.ShowElement(loadingScreen);
         scenesLoading.Add(SceneManager.UnloadSceneAsync(unload));
         scenesLoading.Add(SceneManager.LoadSceneAsync(load, LoadSceneMode.Additive));
         StartCoroutine(GetSceneLoadProgress(loadingScreen));
     }
     public void LoadSceneWithCurtain(int[] unload, int load, string loadingScreen)
     {
-        UIManager.instance.ShowElement(loadingScreen);
+        UIManager.ShowElement(loadingScreen);
         for (int i = 0; i < unload.Length; i++)
         {
             scenesLoading.Add(SceneManager.UnloadSceneAsync(unload[i]));
@@ -111,7 +136,7 @@ public class GameManager : MonoBehaviour
     }
     public void LoadSceneWithCurtain(int unload, int[] load, string loadingScreen)
     {
-        UIManager.instance.ShowElement(loadingScreen);
+        UIManager.ShowElement(loadingScreen);
         scenesLoading.Add(SceneManager.UnloadSceneAsync(unload));
         for (int i = 0; i < load.Length; i++)
         {
@@ -132,7 +157,7 @@ public class GameManager : MonoBehaviour
             }
         }
         if(loadingScreen != null)
-            UIManager.instance.HideElement(loadingScreen);
+            UIManager.HideElement(loadingScreen);
     }
 
     #endregion
