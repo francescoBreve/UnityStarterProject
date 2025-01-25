@@ -28,6 +28,10 @@ public class UIElement : MonoBehaviour
 
     private bool DuplicateValidation()
     {
+        if(this.UIKey == "" ){
+            Debug.LogError("Object with empty UIKey existing in hierarchy with: " + UIKey);
+            return false;
+        }
         UIElement[] elm = Resources.FindObjectsOfTypeAll<UIElement>();
         var dup = elm.Where(i => i.UIKey == this.UIKey);
         return dup.ToList().Count > 1 ? true : false;

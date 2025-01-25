@@ -8,8 +8,9 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
     public List<UIElement> UIElements = new List<UIElement>();
-    public Dictionary<string, UIElement> _UIElements = new Dictionary<string, UIElement>();
-
+    public Dictionary<string, UIElement> _UIElements = new Dictionary<string, UIElement>(); 
+    //Omg not actually a private value but for some reason i'm exposing the cache here.
+    //gotta figure out why I did it.
     private void Awake()
     {
         if (instance == null)
@@ -46,6 +47,9 @@ public class UIManager : MonoBehaviour
     
     }
    
+   public string GetElementUIKey(int x){
+        return UIElements[x].UIKey;
+   }
 
     public void RefreshUIElemets()
     {

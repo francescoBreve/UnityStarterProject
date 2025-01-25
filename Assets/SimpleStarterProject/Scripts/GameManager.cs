@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using System;
 
 public enum GameState
 {
@@ -19,9 +20,15 @@ public enum SceneIndexs
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public GameState gameState;
+    [SerializeField] public GameState gameState; 
 
     public List<AsyncOperation> scenesLoading = new List<AsyncOperation>();
+
+
+    public void SetGameState(int gameStateValue)
+    {
+        gameState = (GameState)gameStateValue;
+    }
 
     private void Awake()
     {
@@ -84,9 +91,16 @@ public class GameManager : MonoBehaviour
             UIManager.instance.RefreshUIElemets();
     }
 
+
     //LoadSceneWithCurtain allows you to load and unload one or multiple scenes
     //In addition it supports the visualization of the UI Element declared in the UI Manager
     #region LoadSceneWithCurtain
+    public void LoadSceneWithDefaultCurtain(int load)
+    {
+        scenesLoading.Add(SceneManager.LoadSceneAsync(load, LoadSceneMode.Additive));
+        StartCoroutine(GetSceneLoadProgress(UIManager.instance.GetElementUIKey(0)));
+    }
+
     public void LoadSceneWithCurtain(int[] load, string loadingScreen)
     {
         UIManager.ShowElement(loadingScreen);
