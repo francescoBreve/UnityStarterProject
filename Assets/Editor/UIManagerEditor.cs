@@ -11,7 +11,8 @@ public class UIManagerEditor : Editor
     {
         base.OnInspectorGUI();
 
-        if(GUILayout.Button("Add all UIElements in Scene"))
+
+        if (GUILayout.Button("Add all UIElements in Scene"))
         {
             UIElement[] elm = Resources.FindObjectsOfTypeAll<UIElement>();
             UIManager sceneInstance = FindObjectOfType<UIManager>();

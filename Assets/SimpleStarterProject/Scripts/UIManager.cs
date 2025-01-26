@@ -8,7 +8,10 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
     public List<UIElement> UIElements = new List<UIElement>();
-    public Dictionary<string, UIElement> _UIElements = new Dictionary<string, UIElement>(); 
+    public Dictionary<string, UIElement> _UIElements = new Dictionary<string, UIElement>();
+
+    public UIElement DefaultLoadingScreen; 
+
     //Omg not actually a private value but for some reason i'm exposing the cache here.
     //gotta figure out why I did it.
     private void Awake()
@@ -34,6 +37,16 @@ public class UIManager : MonoBehaviour
         }
         
     }
+
+    private void OnValidate()
+    {
+        UIElement[] elm = Resources.FindObjectsOfTypeAll<UIElement>();
+        UIElements.Clear();
+        foreach (UIElement e in elm)
+        {
+            UIElements.Add(e);
+        }
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -47,8 +60,13 @@ public class UIManager : MonoBehaviour
     
     }
    
+    public GameObject GetUIElement(string UIkey)
+    {
+        return _UIElements[UIkey].gameObject;
+    }
+
    public string GetElementUIKey(int x){
-        return UIElements[x].UIKey;
+        return UIElements[x].gameObject.name;
    }
 
     public void RefreshUIElemets()
@@ -66,8 +84,8 @@ public class UIManager : MonoBehaviour
     {
         foreach(UIElement x in instance.UIElements)
         {   
-            if(!instance._UIElements.ContainsKey(x.UIKey))
-                instance._UIElements.Add(x.UIKey, x);
+            if(!instance._UIElements.ContainsKey(x.gameObject.name))
+                instance._UIElements.Add(x.gameObject.name, x);
         }
     }
 

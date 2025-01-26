@@ -6,6 +6,7 @@ using System;
 
 public enum GameState
 {
+    MAIN_MENU,
     GAME_SETUP,
     GAME_LOOP,
     GAME_OVER
@@ -55,6 +56,9 @@ public class GameManager : MonoBehaviour
     {
         switch (gameState) 
         {
+            case GameState.MAIN_MENU:
+                //State Code
+                break;
             case GameState.GAME_SETUP:
                 //State Code
                 break;
@@ -98,7 +102,7 @@ public class GameManager : MonoBehaviour
     public void LoadSceneWithDefaultCurtain(int load)
     {
         scenesLoading.Add(SceneManager.LoadSceneAsync(load, LoadSceneMode.Additive));
-        StartCoroutine(GetSceneLoadProgress(UIManager.instance.GetElementUIKey(0)));
+        StartCoroutine(GetSceneLoadProgress(UIManager.instance.DefaultLoadingScreen.name));
     }
 
     public void LoadSceneWithCurtain(int[] load, string loadingScreen)

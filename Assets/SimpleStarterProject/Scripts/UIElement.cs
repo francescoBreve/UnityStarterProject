@@ -4,36 +4,38 @@ using UnityEngine;
 using System.Linq;
 
 [System.Serializable]
+[ExecuteAlways]
 public class UIElement : MonoBehaviour
 {
-    [SerializeField] public string UIKey;
+    
 
+    private void Awake()
+    {
+    }
+    
     private void Reset()
     {
-        UIKey = gameObject.name;
+   
 
         if (DuplicateValidation())
         {
-            Debug.LogError("Already existing object in hierarchy with UIKey: " + UIKey);
+            Debug.LogError("Already existing object in hierarchy with UIKey: " + gameObject.name);
         }
     }
 
     private void OnValidate()
     {
-        if (DuplicateValidation())
-        {
-           Debug.LogError("Already existing object in hierarchy with UIKey: " + UIKey);
-        }
+        Reset();
     }
 
     private bool DuplicateValidation()
     {
-        if(this.UIKey == "" ){
-            Debug.LogError("Object with empty UIKey existing in hierarchy with: " + UIKey);
+        if(this.gameObject.name == "" ){
+            Debug.LogError("Object with empty UIKey existing in hierarchy with: " + gameObject.name);
             return false;
         }
         UIElement[] elm = Resources.FindObjectsOfTypeAll<UIElement>();
-        var dup = elm.Where(i => i.UIKey == this.UIKey);
+        var dup = elm.Where(i => i.gameObject.name == this.gameObject.name);
         return dup.ToList().Count > 1 ? true : false;
     }
 }
